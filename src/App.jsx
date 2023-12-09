@@ -1,15 +1,15 @@
 import React, { createContext, useReducer } from "react"
-import Login from "./pages/Login/Login"
-import Signin from "./pages/Login/Signin"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import User from "./pages/User/User";
-import Home from "./pages/Home/Home";
-import LikesPost from "./pages/Likes/LikesPost";
+
 import reducer from "./Reducer/Reducer";
 import { initialstate } from "./Reducer/Intialstate";
 
-
-
+import User from "./pages/User/User";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Signin from "./pages/Login/Signin";
+import LikesPost from "./pages/Likes/LikesPost";
+import ErrorPage from "./pages/Error/ErrorPage";
 
 const router = createBrowserRouter([
   {
@@ -25,13 +25,17 @@ const router = createBrowserRouter([
     element: <Signin />
   },
   {
-    path: "userprofile",
+    path: "userprofile/:userName",
     element: <User />
   },
   {
     path: "likes",
     element: <LikesPost />
+  },{
+    path:"*",
+    element:<ErrorPage/>
   }
+
 ])
 
 export const UserContext = createContext()
@@ -39,7 +43,6 @@ export const UserContext = createContext()
 function App() {
   const [state, dispatch] = useReducer(reducer, initialstate)
 
- 
   return (
     <UserContext.Provider value={{state,dispatch}}>
       <RouterProvider router={router} /> 

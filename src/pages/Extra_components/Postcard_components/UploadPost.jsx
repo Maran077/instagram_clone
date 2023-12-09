@@ -7,10 +7,16 @@ import LoadingSpinner from "../LoadingSpinner";
 
 import { UserContext } from "../../../App";
 
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function UploadPost({ image, setPost }) {
     const des = useRef()
-    const { state, dispatch } = useContext(UserContext)
+    const { state } = useContext(UserContext)
     const [loading, setLoading] = useState(false)
+
+    const notify = (err) => toast.error(err)
 
     function generateRandomId(length) {
         let result = '';
@@ -43,19 +49,22 @@ function UploadPost({ image, setPost }) {
 
             } catch (error) {
                 setLoading(false)
-                console.log(error);
+                notify(error.code || "error!")
+                // console.log(error);
             }
 
 
         } catch (error) {
-            console.log(error);
+            notify(error.code || "error!")
+            // console.log(error);
         }
-        console.log(id);
 
     }
 
     return (
         <div className="w-[90%] h-[500px] z-30 flex flex-col  items-center bg-white border-[2px] rounded-xl  sm:w-[450px]">
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000} />
+
             <div className="border-b-[1px] border-b-gray-400 w-[100%] flex items-center justify-between px-3">
                 <h1 className="capitalize text-[1.2rem]  font-bold p-3 ">create new post</h1>
                 {loading ? <LoadingSpinner spinner={"w-7 h-7 border-blue-600"} /> :

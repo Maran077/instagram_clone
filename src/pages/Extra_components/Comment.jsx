@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { MdCancel } from "react-icons/md";
 
 import { db } from "../../firebase";
@@ -7,16 +7,22 @@ import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import LoadingSpinner from "./LoadingSpinner";
 import { UserContext } from "../../App";
 
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Comment({ setComment, post }) {
     const commentInput = useRef()
-    const {state,dispatch}= useContext(UserContext)
+    const {state}= useContext(UserContext)
 
     const [share, setShare] = useState()
     const [allComments, setAllComment] = useState([])
 
     const [loading, setLoading] = useState(false)
     const [pageLoading, setpageLoading] = useState(true)
+
+    const notify = (err) => toast.error(err||"error!")
+
 
     const postComment = async () => {
         event.preventDefault()
@@ -33,7 +39,8 @@ function Comment({ setComment, post }) {
             setComment(false)
         } catch (error) {
             setLoading(false)
-            console.log(error);
+            notify(error.code||"error!")
+            // console.log(error);
         }
     }
 
@@ -71,7 +78,8 @@ function Comment({ setComment, post }) {
             setpageLoading(false)
         } catch (error) {
             setpageLoading(false)
-            console.log(error);
+            notify(error.code||"error!")
+            // console.log(error);
         }
     }
 
@@ -84,11 +92,12 @@ function Comment({ setComment, post }) {
         <div className="fixed top-0 left-0 w-[100dvw] h-[100dvh]  z-30 flex justify-center items-center ">
 
             <div className="p-5 flex items-center justify-center h-[100dvh] md:w-[90%] md:ml-auto lg:w-[85%] ">
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000}/>
 
                 {pageLoading ? <LoadingSpinner spinner={"w-16 h-16 border-blue-500"} /> :
                     <form onSubmit={postComment} className="absolute w-[80%] h-[500px] md:w-[700px] border-[3px] p-5 rounded bg-white z-40">
                         <div className="flex-col items-start flex ">
-                            <div className="h-[400px] w-[100%] overflow-scroll">
+                            <div className="h-[400px] w-[100%] overflow-auto">
                            {allComments.map(cmt =>
                            <div className="flex items-center gap-4 mb-5">
                                 <img src={cmt.profilePic} alt="" className="w-16 h-16 rounded-full" />

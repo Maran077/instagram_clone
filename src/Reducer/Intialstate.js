@@ -1,11 +1,15 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
-import Cookies from "js-cookie";
 import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+
+import Cookies from "js-cookie";
+
 
 export let initialstate
 
 let user = Cookies.get("user")
-if (user) {
+
+try {
+  if (!user) return alert("please login first");
   user = JSON.parse(user)
   console.log(user.uid);
   const q = query(collection(db, "users"), where("uid", "==", user.uid))
@@ -14,6 +18,9 @@ if (user) {
     initialstate = doc.data()
     console.log(doc.id, " => ", doc.data());
   });
+
+} catch (error) {
+  alert(error.code || "error!")
 }
 
 

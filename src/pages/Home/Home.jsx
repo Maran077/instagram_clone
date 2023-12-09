@@ -17,11 +17,15 @@ import LoadingSpinner from "../Extra_components/LoadingSpinner";
 import Cookies from "js-cookie";
 import { UserContext } from "../../App";
 
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function Home() {
     const searchInput = useRef()
     const navigate = useNavigate()
-    const { state, dispatch } = useContext(UserContext)
-    
+    const { state } = useContext(UserContext)
+
     const [allPosts, setAllPosts] = useState([])
     const [otherUsersData, setOtherUsersData] = useState([])
 
@@ -29,19 +33,21 @@ function Home() {
     const [loading, setLoading] = useState(true)
     const [settings, setSettings] = useState(false)
 
-
+    const notify = (err) => toast.error(err || "error!")
 
     const getUserData = async () => {
         const user = Cookies.get("user")
+        if (!user) return location = "/signin";
 
         setAllPosts([])
-        if (!user) return navigate("/signin");
         try {
-            const posts_query = query(collection(db, "posts"))
-            const posts_docs = await getDocs(posts_query)
             let pic;
             let following;
             let name;
+
+            const posts_query = query(collection(db, "posts"))
+            const posts_docs = await getDocs(posts_query)
+
             for (const post of posts_docs.docs) {
 
                 const post_user_query = query(
@@ -72,8 +78,9 @@ function Home() {
 
             setLoading(false)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false)
+            notify(error.code||"error!")
         }
 
     }
@@ -88,21 +95,24 @@ function Home() {
                 setOtherUsersData(item => [...item, doc.data()])
             })
         } catch (error) {
-            console.log(error);
+            notify(error.code||"error!")
+            // console.log(error);
         }
 
     }
 
     useEffect(() => {
-        // setLoading(false)
+        setLoading(true)
 
         getUserData
         return getUserData
-    },[])
+    }, [])
 
     return (
         <>
             <Menu size={37} search={search} setSearch={search} />
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000}/>
+
 
             {loading ? <LoadingSpinner container={"w-[100%] md:w-[90%] lg:w-[85%] h-screen md:ml-auto"} spinner={"w-16 h-16 border-blue-500"} />
                 :

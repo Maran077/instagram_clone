@@ -16,11 +16,15 @@ import SettingsMenu from "../Extra_components/SettingMenu";
 import Cookies from "js-cookie";
 import { UserContext } from "../../App";
 
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function LikesPost() {
     const searchInput = useRef()
     const navigate = useNavigate()
 
-    const { state, dispatch } = useContext(UserContext)
+    const { state } = useContext(UserContext)
 
     const [allPosts, setAllPosts] = useState([])
 
@@ -28,6 +32,7 @@ function LikesPost() {
     const [settings, setSettings] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
 
+    const notify = (err) => toast.error(err||"error!")
 
     const getUserData = async () => {
         const user = Cookies.get("user")
@@ -58,8 +63,10 @@ function LikesPost() {
             })
             setLoading(false)
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setLoading(false)
+            notify(error.code||"error!")
+
         }
     }
 
@@ -73,7 +80,8 @@ function LikesPost() {
                 setOtherUsersData(item => [...item, doc.data()])
             })
         } catch (error) {
-            console.log(error);
+            notify(error.code||"error!")
+            // console.log(error);
         }
 
     }
@@ -86,6 +94,8 @@ function LikesPost() {
     return (
         <div>
             <Menu size={37} />
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000}/>
+
             {loading ? <LoadingSpinner container={"w-[100%] md:w-[90%] lg:w-[85%] h-screen md:ml-auto"} spinner={"w-16 h-16 border-blue-500"} />
                 :
                 <div className="md:w-[90%] md:ml-auto flex flex-col p-3 gap-4 lg:w-[85%] ">

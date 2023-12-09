@@ -2,35 +2,44 @@ import React, { useRef, useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 import { MdCancel } from "react-icons/md";
 import { BiSearchAlt2 } from "react-icons/bi";
+
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
+
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function Search({ otherUsersData, setSearch }) {
 
     const input = useRef()
     const [isFocused, setIsFocused] = useState(false)
-    const [usersData,setUsersData]=useState(otherUsersData)
-    
-    const getOtherUser=async()=>{
-        const userName=input.current.value;
+    const [usersData, setUsersData] = useState(otherUsersData)
+
+    const notify = (err) => toast.error(err)
+
+    const getOtherUser = async () => {
+        const userName = input.current.value;
         console.log(userName);
         setUsersData([])
         try {
-            const q = query(collection(db,"users"),where("name",">=",userName))
+            const q = query(collection(db, "users"), where("name", ">=", userName))
             const res = await getDocs(q)
-            res.forEach((doc)=>{
-                setUsersData(item=>[...item,doc.data()])
+            res.forEach((doc) => {
+                setUsersData(item => [...item, doc.data()])
                 console.log(doc.data());
-             })
-             setIsFocused(true)
-         
+            })
+            setIsFocused(true)
+
         } catch (error) {
-         console.log(error);
+            notify(error.code || "error!")
+            //  console.log(error);
         }
- 
-     }
+
+    }
     return (
         <div className="fixed w-[100dvw] h-[100dvh]  z-30 flex justify-center items-center ">
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000} />
+
             <div className=" w-[80dvw] h-[40dvh] bg-white rounded border-4 z-30 mx-auto mt-[45dvh] md:mt-0 left-[10dvw] md:top-[30dvh] overflow-scroll">
                 <div className="bg-[#ffffff] hidden md:flex items-center rounded w-[60%] h-8 gap-2 px-3 ml-[20%]">
                     <BiSearchAlt2 className={isFocused ? "hidden" : "inline w-[10%] "} color="gray" />

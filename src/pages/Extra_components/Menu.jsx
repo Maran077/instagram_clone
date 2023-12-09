@@ -13,7 +13,7 @@ import { UserContext } from "../../App";
 
 
 function Menu({size}) {
-    const {state,dispatch}= useContext(UserContext)
+    const {state}= useContext(UserContext)
 
     const [iconSize, setIconsize] = useState(size)
 
@@ -68,7 +68,7 @@ function Menu({size}) {
               {settings&&  <SettingsMenu/>}
             </div>
             <div className=" cursor-pointer">
-                <Link  to={"/userprofile"} className="flex items-center gap-2" relative={"path"}>
+                <Link  to={`/userprofile/${state.name}`} className="flex items-center gap-2" relative={"path"}>
 
                     <img src={state && state.profilePic} id="profile" className="w-[30px] h-[30px]  rounded-full" alt="" />
                     <label htmlFor="profile" className="text-[1.4rem] hidden lg:block" >Profile</label>

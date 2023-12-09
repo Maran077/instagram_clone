@@ -10,6 +10,10 @@ import LoadingSpinner from "../Extra_components/LoadingSpinner";
 import Cookies from "js-cookie";
 import { UserContext } from "../../App";
 
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 function UserEdit({ setEdit }) {
 
     const {state,dispatch}= useContext(UserContext)
@@ -18,6 +22,8 @@ function UserEdit({ setEdit }) {
     const [image, setImage] = useState(state.profilePic)
     const [des, setDes] = useState(state.des)
     const [loading, setLoading] = useState(false)
+
+    const notify = (err) => toast.error(err||"error!")
 
     const upload = (e) => {
         const type = e.target.files[0].type.split("/")[0]
@@ -61,11 +67,13 @@ function UserEdit({ setEdit }) {
                 })
             } catch (error) {
                 console.log(error);
+                notify(error.code||"error!")
             }
 
 
         } catch (error) {
             console.log(error);
+            notify(error.code||"error!")
         }
 
     }
@@ -73,7 +81,8 @@ function UserEdit({ setEdit }) {
 
     return (
         <div className="fixed w-[100dvw] h-[100dvh]  z-30 flex justify-center items-center ">
-  
+            <ToastContainer position={"bottom-center"} transition={Bounce} autoClose={1000}/>
+           
             <div className="p-5 flex items-center justify-center h-[100dvh] md:w-[90%] md:ml-auto lg:w-[85%] ">
                 <div className="w-[80%] mobile:w-[400px] border-[3px] p-5 rounded bg-white z-40">
                     <h1 className="capitalize  text-[2rem]">edit profile </h1>
