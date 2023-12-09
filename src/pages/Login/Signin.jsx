@@ -20,7 +20,7 @@ function Signin() {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
-  const [errorMsg, setErrormsg] = useState("hi")
+  const [errorMsg, setErrormsg] = useState("")
 
   // for give value to firebse datebase
   const emailInput = useRef()
