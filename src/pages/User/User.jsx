@@ -56,13 +56,11 @@ function User() {
             console.log(userName);           
             const q = query(collection(db, "users"), where("names", "==", userName))
             const snapshot = await getDocs(q)
-            console.log("k");
             for(let doc of snapshot.docs){
                 setUserData(doc.data())
                 console.log(doc.data())
                 getUserPost(doc.data().userId)
             }
-            console.log("l");
         } catch (error) {
             console.log(error); 
             setLoading(false)
