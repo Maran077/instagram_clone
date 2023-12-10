@@ -78,7 +78,7 @@ function Home() {
 
             setLoading(false)
         } catch (error) {
-            // console.log(error);
+            // console.log(error,error.code);
             setLoading(false)
             notify(error.code||"error!")
         }

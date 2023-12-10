@@ -43,26 +43,21 @@ function User() {
             setLoading(false)
             
         } catch (error) {
-            // console.log(error);
             setLoading(false)
             notify(error.code||"error!")
         }
     }
     
     const getUserData= async ()=>{
-
         if (userName===state.name)return (setUserData(state),getUserPost(state.userId));
-        try { 
-            console.log(userName);           
-            const q = query(collection(db, "users"), where("names", "==", userName))
+        try {           
+            const q = query(collection(db, "users"), where("name", "==", userName))
             const snapshot = await getDocs(q)
             for(let doc of snapshot.docs){
                 setUserData(doc.data())
-                console.log(doc.data())
                 getUserPost(doc.data().userId)
             }
         } catch (error) {
-            console.log(error); 
             setLoading(false)
             notify(error.code||"error!")
 

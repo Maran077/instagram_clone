@@ -23,6 +23,13 @@ function reducer(state, action) {
 
       };
     }
+    case 'set_intialstate_data': {
+      console.log(action.intialState,"initialstate");
+      return {
+        ...action.intialState
+
+      };
+    }
 
   }
 }
